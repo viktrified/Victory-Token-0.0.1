@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 interface IERC20 {
-    function transfer(address to, uint256 amount) external view returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     event Transfer(address indexed from, address indexed to, uint256 value);
 }
@@ -11,7 +11,7 @@ contract Faucet {
     address payable owner;
     IERC20 public token;
 
-    uint256 public withdrawlAmount = 50 * (10 ** 18);
+    uint256 public withdrawalAmount = 50 * (10 ** 18);
     uint256 public lockTime = 1 minutes;
 
     event Withdrawl(address indexed to, uint256 indexed amount);
@@ -30,7 +30,7 @@ contract Faucet {
             "Request must not originate from a zero account"
         );
         require(
-            token.balanceOf(address(this)) >= withdrawlAmount,
+            token.balanceOf(address(this)) >= withdrawalAmount,
             "Insufficient balance in faucet for withdraw"
         );
         require(
@@ -40,7 +40,7 @@ contract Faucet {
 
         nextAccessTime[msg.sender] = block.timestamp + lockTime;
 
-        token.transfer(msg.sender, withdrawlAmount);
+        token.transfer(msg.sender, withdrawalAmount);
     }
 
     receive() external payable {
@@ -52,7 +52,7 @@ contract Faucet {
     }
 
     function setWithdrawalAmount(uint256 amount) public onlyOwner {
-        withdrawlAmount = amount * (10 ** 18);
+        withdrawalAmount = amount * (10 ** 18);
     }
 
     function setLockTime(uint256 amount) public onlyOwner {
